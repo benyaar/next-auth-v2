@@ -8,6 +8,11 @@ async function handler(req, res) {
             res.status(422).json('Invalid input')
             return
         }
+        const existUser = await db.collection('users').findOne({email})
+        if(existUser){
+            res.status(422).json({message: 'User exists'})
+            return 
+        }
         const hashedPassword = await hashPassword(password)
 
         const result = await db.collection('users').insertOne({
