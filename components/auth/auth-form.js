@@ -1,16 +1,18 @@
 import { useState, useRef } from 'react';
 import classes from './auth-form.module.css';
+import { signIn } from 'next-auth/client';
 
-async function createUser(email, password){
+
+async function createUser(email, password) {
   const response = await fetch('/api/auth/signup', {
-    method: 'POST', 
-    body: JSON.stringify({email, password}),
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
     headers: {
       'Content-Type': 'application/json'
     }
   })
   const data = await response.json()
-  if(!response.ok){
+  if (!response.ok) {
     throw new Error(data.message || 'Error')
   }
   return data
@@ -32,9 +34,15 @@ function AuthForm() {
     const enteredPassword = passwordInputRef.current.value;
 
     if (isLogin) {
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: enteredEmail,
+        password: enteredPassword
+      })
+
 
     } else {
-      const result = await createUser(enteredEmail, enteredPassword )
+      const result = await createUser(enteredEmail, enteredPassword)
     }
   }
 
@@ -48,7 +56,7 @@ function AuthForm() {
         </div>
         <div className={classes.control}>
           <label htmlFor='password'>Your Password</label>
-          <input type='password' id='password' required  ref={passwordInputRef}/>
+          <input type='password' id='password' required ref={passwordInputRef} />
         </div>
         <div className={classes.actions}>
           <button>{isLogin ? 'Login' : 'Create Account'}</button>
