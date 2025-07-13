@@ -1,4 +1,3 @@
-import { getSession } from 'next-auth/react';
 import ProfileForm from './profile-form';
 import classes from './user-profile.module.css';
 
